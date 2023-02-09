@@ -1,12 +1,12 @@
-# rbm-campaign-shopping
+# CAMPANHA DE CUPONS
 
 Este é um trabalho do curso de PHP feito pela RBM WEB que consiste em um sistema de cadastro e sorteio de cupons.
 
-# Tecnologias usadas:
+## Tecnologias usadas:
 
 HTML, CSS e PHP no front-end, PHP e SQL(MySQL) no back-end.
 
-# ADMIN:
+## ADMIN:
 
 Acesso a administração:
 
