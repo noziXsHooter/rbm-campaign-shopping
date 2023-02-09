@@ -4,7 +4,9 @@ include '../layouts/dashboardHeader.php';
 
 require_once '../controllers/indexController.php';
 
-$p = new Index('shopping_campaign', 'localhost', 'root', '');
+include '../inc/config.php';
+
+$p = new Index($dbname, $host, $user, $password);
 
 
 if(!isset($_SESSION['logged']) and !$_SESSION['logged']){

@@ -4,7 +4,9 @@ include '../layouts/dashboardHeader.php';
 
 require_once '../controllers/indexController.php';
 
-$p = new Index('shopping_campaign', 'localhost', 'root', '');
+include '../inc/config.php';
+
+$p = new Index($dbname, $host, $user, $password);
 
 
 if(!isset($_SESSION['logged']) and !$_SESSION['logged']){
@@ -37,7 +39,7 @@ if(isset($_GET['userId'])){
 
 echo "<h1 style='text-align: center;color:white'> Lista de Cupons </h1>";
 echo "<table style='text-align: center;color:white' width='100%'><tr>";
-echo "<tr><th>Código</th><th>Valor</th><th>Loja</th><th>Data-Hora</th><th>Data-Status</th></tr>";
+echo "<tr><th>Código</th><th>Valor</th><th>Loja</th><th>Data-Hora</th><th>Status</th></tr>";
 foreach ($result as $key => $value) {
     echo '<tr>';
     foreach ($value as $key2 => $value2) {
