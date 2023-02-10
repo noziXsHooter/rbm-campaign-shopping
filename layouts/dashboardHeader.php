@@ -8,11 +8,6 @@ $p = new Index($dbname, $host, $user, $password);
 if(isset($_GET['logout'])) $p->logout();
 
 
-if(isset($_POST['raffle'])){
-
-    
-
-}
 ?>
 
 <html>
@@ -24,6 +19,9 @@ if(isset($_POST['raffle'])){
       <?php if($_SESSION['autho'] == 5) echo '<a href="dashboardUsers.php">Usuários</a>'; ?>
 
       <?php if($_SESSION['autho'] == 5) echo '<a href="dashboardSweepstake.php">Sorteio</a>'; ?>
+      
+      <a href="dashboardMyCoupons.php">Meus Cupons</a>
+      
       <a id='logout' href="?logout=logout">Logout</a>
 
       <?php if(isset($_SESSION['name'])) echo "<span>Olá! ".$_SESSION['name']."</span>" ?>

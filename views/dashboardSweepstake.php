@@ -9,6 +9,8 @@ include '../inc/config.php';
 $p = new Index($dbname, $host, $user, $password);
 
 
+$sweepstakeErrorMessage = '';
+
 if(!isset($_SESSION['logged']) and !$_SESSION['logged']){
 
   header( 'Location: login.php');
@@ -23,9 +25,19 @@ if(isset($_POST['raffle'])){
 
 if(isset($_POST['end-raffle'])){
 
-  $raffleResult = $p->endRaffle();
+  $p->endRaffle();
 
 }
+
+if(isset($_POST['enable-raffle'])){
+
+  $p->enableSweepstake();
+
+}
+
+$sweepstakeStatus = $p->verifySweepstakeStatus();
+
+$sweepstakeMessage = $sweepstakeStatus ? "Sorteio realizado!" : "O sorteio ainda não foi realizado!";
 
 ?>
 
@@ -40,14 +52,16 @@ if(isset($_POST['end-raffle'])){
 <body>
 
 <?php
-  echo "<h1> O sorteio ainda não foi realizado! </h1>";
-  if(!empty($raffleResult)) echo "<h3> O número sorteado é: ". $raffleResult[0] ."<br> E o nome do ganhador é: ". $raffleResult[1] ." </h3>";
+  echo "<h1>". $sweepstakeMessage ."</h1>";
+  if(isset($raffleResult['winnerNumber'])) echo "<h3> O número sorteado é: ". $raffleResult['winnerNumber'] ."<br> E o nome do ganhador é: ". $raffleResult['winnerName'] ." </h3>";
+  if(isset($raffleResult['message'])) echo "<h3>". $raffleResult['message'] . "</h3>";
 ?>
 <div class="container">
   <form id="raffle" name="raffle" action="dashboardSweepstake.php" method="post">
 
-    <input type="submit" id="raffle" name="raffle" value="Sortear">
-    <input type="submit" id="end-raffle" name="end-raffle" value="Finalizar Sorteio">
+    <input type="submit" id="raffle" name="raffle" value="Sortear"><br>
+    <input type="submit" id="end-raffle" name="end-raffle" value="Finalizar Sorteio"><br>
+    <input type="submit" id="enable-raffle" name="enable-raffle" value="Habilitar Novo Sorteio">
     <?php if(!empty($message) and !$isValid) echo "<div id='error-message'>".$message."</div>" ?>
   
   </form>
@@ -79,6 +93,8 @@ h3{
 }
 
 input[type=submit]{
+  margin: 5px;
+  width: 200px;
   padding: 10px;
 }
 

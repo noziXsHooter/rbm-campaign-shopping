@@ -203,8 +203,19 @@ Class Index {
 
         return $result;
     }
-    //LIST OS COUPONS DO USUARIO
+    //LISTA OS COUPONS DO USUARIO
     public function listUserCoupons($id){
+
+        $result = array();
+        $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status DESC";
+        $query = $this->pdo->query($sql);
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    //LISTA OS NUMEROS DA SORTE
+    public function listLuckNumbers($id){
 
         $result = array();
         $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id";
@@ -244,6 +255,7 @@ Class Index {
         $result->bindValue(":status", 0);
         $result->bindValue(":id", $id);
         $result->execute();
+
     }
 
     // GERA O GUID
@@ -261,6 +273,17 @@ Class Index {
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    //VERIFICA ESTADO DO SORTEIO
+    public function verifySweepstakeStatus(){
+
+        $result = array();
+        $sql = "SELECT status FROM sweepstake_status";
+        $query = $this->pdo->query($sql);
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result[0]['status'];
+    }
+
     //REALIZA O SORTEIO
     public function raffle(){
 
@@ -269,21 +292,43 @@ Class Index {
         $query = $this->pdo->query($sql);
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        $hashList = array();
-        foreach($result as $key=>$value){
-            foreach ($value as $key2 => $value2) {
-                array_push($hashList, $value2);
+
+        if(!empty($result)){
+            
+            $hashList = array();
+            foreach($result as $key=>$value){
+                foreach ($value as $key2 => $value2) {
+                    array_push($hashList, $value2);
+                }
             }
+            $raffled = array_rand($hashList, 2);
+    
+            $winnerName = $this->searchForHashOwner($hashList[$raffled[0]]);
+    
+            //MUDA O STATUS DO SORTEIO
+            $query = $this->pdo->query("UPDATE sweepstake_status SET status = 1");
+            
+            return [
+                "winnerNumber" => $hashList[$raffled[0]],
+                "winnerName" => $winnerName[0]['name'],
+            ];
+
+        }else{
+            return [
+                "success" =>  false,
+                "message" => 'Não há números a serem sorteados!'
+            ];
         }
 
-        $raffled = array_rand($hashList, 2);
 
-        $winnerName = $this->searchForHashOwner($hashList[$raffled[0]]);
+    }
 
-        return [
-            $hashList[$raffled[0]],
-            $winnerName[0]['name'],
-        ];
+    //MUDA STATUS DO SORTEIO PARA FALSE NO DB PARA HABILITAR NOVO SORTEIO (SORTEIO NÂO REALIZADO)
+    public function enableSweepstake(){
+
+       //MUDA O STATUS DO SORTEIO
+       $query = $this->pdo->query("UPDATE sweepstake_status SET status = 0");
+    
     }
 
     public function searchForHashOwner($hash){
