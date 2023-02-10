@@ -44,6 +44,7 @@ if(isset($_POST['coupon_register'])){
   $result = $p->listUsers();
 
       echo "<h1 style='text-align: center;color:white'> Lista de usuários </h1>";
+      echo "<h5 style='text-align: left;color:white'> Clique no ID para ver os cupons do usuário </h5>";
       echo "<table style='text-align: center;color:white' width='100%'><tr>";
       echo "<tr><th>ID</th><th>Nome</th><th>Sexo</th><th>Nascimento</th></tr>";
       foreach ($result as $key => $value) {

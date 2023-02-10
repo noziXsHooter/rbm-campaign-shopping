@@ -6,12 +6,16 @@ Este é um trabalho do curso de PHP feito pela RBM WEB que consiste em um sistem
 
 HTML, CSS e PHP no front-end, PHP e SQL(MySQL) no back-end.
 
-## ADMIN:
+## Admin:
 
 Acesso a administração:
 
+```
 Login: 11111111111
 
 Senha: 12345
 
-As contas criadas por usuários externos têm acesso somente ao cadastro de cupons e aos próprios cupons cadastrados.
+```
+
+> As contas criadas por usuários externos têm acesso somente ao cadastro de cupons > e aos próprios cupons cadastrados.
+

@@ -345,7 +345,6 @@ Class Index {
 
         $sql = "DELETE FROM luck_numbers";
         $result = $this->pdo->query($sql);
-        /* $result->execute(); */
     }
 
     //DESLOGA

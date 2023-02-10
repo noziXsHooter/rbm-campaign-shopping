@@ -79,7 +79,7 @@ if(isset($_POST['coupon_register'])){
     <input name="store" id="store" type="text" size="20" maxlength="100">
     
     <label>Data-Hora da Compra: </label>
-    <input name="date_time" id="date_time" type="text" size="20" maxlength="100">
+    <input name="date_time" id="date_time" type="datetime-local" size="20" maxlength="100">
 
     <label>Status: </label>
     <select name="status" id="status">
@@ -105,7 +105,7 @@ body{
 .container {
           display: flex;
           justify-content: center;
-          align-items: center;
+         /*  align-items: center; */
           /* text-align: center; */
           min-height: 100vh;
           background-color: #1f2937;
@@ -140,7 +140,7 @@ body{
         cursor: pointer;
       }
 
-      input[type=text],[type=date],[type=number], select {
+      input[type=text],[type=datetime-local],[type=number], select {
         width: 100%;
         padding: 12px 20px;
         margin: 8px 0;
