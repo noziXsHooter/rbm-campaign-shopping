@@ -19,3 +19,4 @@ Senha: 12345
 
 > As contas criadas por usuários externos têm acesso somente ao cadastro de cupons > e aos próprios cupons cadastrados.
 
+> Você pode acessar o site de teste pelo link: https://rbm-campanha-shopping.000webhostapp.com/
