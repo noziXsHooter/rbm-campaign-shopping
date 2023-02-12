@@ -7,7 +7,11 @@ $p = new Index($dbname, $host, $user, $password);
 
 if(isset($_GET['logout'])) $p->logout();
 
+if(!isset($_SESSION['logged'])){
 
+  header('Location: ../index.php');
+
+}
 ?>
 
 <html>

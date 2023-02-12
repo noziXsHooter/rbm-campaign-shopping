@@ -9,9 +9,9 @@ include '../inc/config.php';
 $p = new Index($dbname, $host, $user, $password);
 
 
-if(!isset($_SESSION['logged']) and !$_SESSION['logged']){
+if(!isset($_SESSION['logged'])){
 
-  header( 'Location: login.php');
+  header('Location: ../index.php');
 
 }
 

@@ -11,9 +11,9 @@ $p = new Index($dbname, $host, $user, $password);
 
 $sweepstakeErrorMessage = '';
 
-if(!isset($_SESSION['logged']) and !$_SESSION['logged']){
+if(!isset($_SESSION['logged'])){
 
-  header( 'Location: login.php');
+  header('Location: ../index.php');
 
 }
 

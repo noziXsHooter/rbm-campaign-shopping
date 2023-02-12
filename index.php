@@ -1,8 +1,8 @@
 <?php
 
-require_once '../controllers/indexController.php';
+require_once './controllers/indexController.php';
 
-include '../inc/config.php';
+include './inc/config.php';
 
 $p = new Index($dbname, $host, $user, $password);
 
@@ -49,7 +49,7 @@ if(isset($_POST['login'])){
 
   
   <div>
-    <form id="login" name="login" class="form" action="login.php" method="post">
+    <form id="login" name="login" class="form" action="index.php" method="post">
     <h1>Login</h1>
    
     <label>CPF: </label>

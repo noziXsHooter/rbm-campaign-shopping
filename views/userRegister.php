@@ -72,7 +72,7 @@ if(isset($_POST['user_register'])){
 
     <input type="submit" id="user_register" name="user_register" value="Registrar">
 
-    <a href="login.php">Logar</a>
+    <a href="../index.php">Logar</a>
     </form>
 </div>
 <style>

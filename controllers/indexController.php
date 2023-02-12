@@ -2,6 +2,7 @@
 
 session_start();
 
+
 Class Index {
 
     private $pdo;
@@ -33,7 +34,7 @@ Class Index {
         if(count($result) > 0){
 
                 header(
-                    'Location: ../views/dashboardHome.php?'
+                    'Location: ./views/dashboardHome.php?'
                 );
 
                 $_SESSION['logged'] = true;
@@ -460,7 +461,7 @@ Class Index {
        /*  session_unset(); */
         session_destroy();
 
-        header('Location: login.php');
+        header('Location: ../index.php');
     }
 
 }

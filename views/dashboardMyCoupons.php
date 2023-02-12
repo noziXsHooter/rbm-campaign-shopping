@@ -1,5 +1,6 @@
 <?php
 
+
 include '../layouts/dashboardHeader.php';
 
 require_once '../controllers/indexController.php';
@@ -10,9 +11,9 @@ $p = new Index($dbname, $host, $user, $password);
 
 $result = array();
 
-if(!isset($_SESSION['logged']) and !$_SESSION['logged']){
+if(!isset($_SESSION['logged'])){
 
-  header( 'Location: login.php');
+  header('Location: ../index.php');
 
 }
 
