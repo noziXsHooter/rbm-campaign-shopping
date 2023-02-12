@@ -196,66 +196,124 @@ Class Index {
     // LISTA USUARIOS
     public function listUsers(){
 
-        $result = array();
-        $sql = "SELECT id, name, sex, born_in FROM users";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        try {
 
-        return $result;
+            $result = array();
+            $sql = "SELECT id, name, sex, born_in FROM users";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result;
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
+
     }
     //LISTA OS COUPONS DO USUARIO
     public function listUserCoupons($id){
 
-        $result = array();
-        $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status DESC";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result;
+        try {
+
+            $result = array();
+            $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status DESC";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result;
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     }
 
     //LISTA OS NUMEROS DA SORTE
     public function listLuckNumbers($id){
 
-        $result = array();
-        $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        try {
 
-        return $result;
+            $result = array();
+            $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result;
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
+
     }
 
     //PEGA OS CUPONS VALIDOS
     public function getUserValidCoupons($id){
 
-        $result = array();
-        $sql = "SELECT SUM(valor) AS total FROM coupons WHERE user_id = $id and status = '1'";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result[0]['total'];
+        try {
+
+            $result = array();
+            $sql = "SELECT SUM(valor) AS total FROM coupons WHERE user_id = $id and status = '1'";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result[0]['total'];
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     }
 
     //CRIA OS NUMEROS DA SORTE
     public function createLuckNumbers($guid, $id){
 
-        $sql = "INSERT INTO luck_numbers (hash, user_id) VALUES (:hash, :user_id)";
-        $result = $this->pdo->prepare($sql);
-        $result->bindValue(":hash", $guid);
-        $result->bindValue(":user_id", $id);
-        $result->execute();
+        try {
+
+            $sql = "INSERT INTO luck_numbers (hash, user_id) VALUES (:hash, :user_id)";
+            $result = $this->pdo->prepare($sql);
+            $result->bindValue(":hash", $guid);
+            $result->bindValue(":user_id", $id);
+            $result->execute();
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
+
 
     }
 
     //DESATIVA OS CUPONS QUE JA FORAM PROCESSADOS
     public function deactivateCoupons($id){
 
-        $sql = "UPDATE coupons SET status = :status WHERE user_id = :id";
-        $result = $this->pdo->prepare($sql);
-        $result->bindValue(":status", 0);
-        $result->bindValue(":id", $id);
-        $result->execute();
+        try {
 
+            $sql = "UPDATE coupons SET status = :status WHERE user_id = :id";
+            $result = $this->pdo->prepare($sql);
+            $result->bindValue(":status", 0);
+            $result->bindValue(":id", $id);
+            $result->execute();
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     }
 
     // GERA O GUID
@@ -276,22 +334,40 @@ Class Index {
     //VERIFICA ESTADO DO SORTEIO
     public function verifySweepstakeStatus(){
 
-        $result = array();
-        $sql = "SELECT status FROM sweepstake_status";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        try {
 
-        return $result[0]['status'];
+            $result = array();
+            $sql = "SELECT status FROM sweepstake_status";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result[0]['status'];
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     }
 
     //REALIZA O SORTEIO
     public function raffle(){
+        
+        try {
 
-        $result = array();
-        $sql = "SELECT hash FROM luck_numbers";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+            $result = array();
+            $sql = "SELECT hash FROM luck_numbers";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
 
         if(!empty($result)){
             
@@ -326,25 +402,53 @@ Class Index {
     //MUDA STATUS DO SORTEIO PARA FALSE NO DB PARA HABILITAR NOVO SORTEIO (SORTEIO NÂO REALIZADO)
     public function enableSweepstake(){
 
-       //MUDA O STATUS DO SORTEIO
-       $query = $this->pdo->query("UPDATE sweepstake_status SET status = 0");
+        try {
+
+            //MUDA O STATUS DO SORTEIO
+            $query = $this->pdo->query("UPDATE sweepstake_status SET status = 0");
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     
     }
 
     public function searchForHashOwner($hash){
 
-        $sql = "SELECT n.hash, u.name FROM luck_numbers AS n INNER JOIN users AS u ON n.user_id=u.id WHERE n.hash='$hash'";
-        $query = $this->pdo->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result;
+        try {
+
+            $sql = "SELECT n.hash, u.name FROM luck_numbers AS n INNER JOIN users AS u ON n.user_id=u.id WHERE n.hash='$hash'";
+            $query = $this->pdo->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            return $result;
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
+        
     }
 
     //FINALIZA SORTEIO E LIMPA OS NUMEROS
     public function endRaffle(){
+        try {
 
-        $sql = "DELETE FROM luck_numbers";
-        $result = $this->pdo->query($sql);
+            $sql = "DELETE FROM luck_numbers";
+            $result = $this->pdo->query($sql);
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
     }
 
     //DESLOGA
