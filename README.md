@@ -1,4 +1,4 @@
-# CAMPANHA DE CUPONS
+# Campanha de Cupons
 
 Este é um trabalho do curso de PHP feito pela RBM WEB que consiste em um sistema de cadastro e sorteio de cupons.
 
