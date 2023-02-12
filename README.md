@@ -1,4 +1,4 @@
-# Campanha de Cupons
+# Campanha de Cupons - Shopping Independência
 
 Este é um trabalho do curso de PHP feito pela RBM WEB que consiste em um sistema de cadastro e sorteio de cupons.
 
