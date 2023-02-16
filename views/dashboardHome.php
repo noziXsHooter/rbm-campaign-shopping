@@ -40,10 +40,15 @@ if(isset($_POST['coupon_register'])){
         $isValid = true; 
         $message = 'Cupom cadastrado com sucesso!';
   
-      }elseif(empty($response['success'])){
+      }elseif(!$response['success']){
 
         $isValid = false; 
         $message = $response['message'];
+
+      }else{
+        
+        $isValid = false; 
+        $message = 'Algum problema foi encontrado!';
 
       }
     }

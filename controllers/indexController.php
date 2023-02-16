@@ -107,8 +107,6 @@ Class Index {
                 $prepare->bindValue(":status", $status);
                 $prepare->execute();
 
-                return $prepare->rowCount();
-    
             } catch (Exception $e) {
 
                 return [
