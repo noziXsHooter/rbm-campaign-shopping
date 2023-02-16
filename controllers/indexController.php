@@ -5,15 +5,15 @@ session_start();
 
 Class Index {
 
-    private $pdo;
+    private $conn;
 
     //CONSTROI A CONEXÃO COM O DB
     public function __construct($dbname, $host, $user, $password)
     {
         try{
 
-            $this->pdo = new PDO("mysql:dbname=".$dbname.";host=".$host, $user, $password);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn = new PDO("mysql:dbname=".$dbname.";host=".$host, $user, $password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         }catch(PDOException $e){
 
@@ -24,25 +24,24 @@ Class Index {
     }
 
     //LOGA
-    public function login($cpf,$password){
+    public function login($cpf,$password): array
+    {
         
         $result = array();
         $sql = "SELECT * FROM users WHERE cpf = '$cpf' and password = '$password'";
-        $query = $this->pdo->query($sql);
+        $query = $this->conn->query($sql);
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         if(count($result) > 0){
 
-                header(
-                    'Location: ./views/dashboardHome.php?'
-                );
-
-                $_SESSION['logged'] = true;
-                $_SESSION['name'] = $result[0]['name'];
-                $_SESSION['autho'] = $result[0]['autho'];
-                $_SESSION['id'] = $result[0]['id'];
-                $_SESSION['cpf'] = $result[0]['cpf'];
+            $_SESSION['logged'] = true;
+            $_SESSION['name'] = $result[0]['name'];
+            $_SESSION['autho'] = $result[0]['autho'];
+            $_SESSION['id'] = $result[0]['id'];
+            $_SESSION['cpf'] = $result[0]['cpf'];
                 
+            header('Location: ./views/dashboardHome.php?');
+
         }else {
 
             return [
@@ -53,21 +52,24 @@ Class Index {
     }
 
     //REGISTRA USUARIO
-    public function userRegister($name, $born_in, $sex, $cpf, $password){
+    public function userRegister($name, $born_in, $sex, $cpf, $password): int|array
+    {
 
         try {
 
             $sql = "INSERT INTO users (name, born_in, autho, sex, cpf, password) 
                     VALUES (:name, :born_in, :autho, :sex, :cpf, :password)";
 
-            $result = $this->pdo->prepare($sql);
-            $result->bindValue(":name", $name);
-            $result->bindValue(":born_in", $born_in);
-            $result->bindValue(":autho", 1);
-            $result->bindValue(":sex", $sex);
-            $result->bindValue(":cpf", $cpf);
-            $result->bindValue(":password", $password);
-            $result->execute();
+            $prepare = $this->conn->prepare($sql);
+            $prepare->bindValue(":name", $name);
+            $prepare->bindValue(":born_in", $born_in);
+            $prepare->bindValue(":autho", 1);
+            $prepare->bindValue(":sex", $sex);
+            $prepare->bindValue(":cpf", $cpf);
+            $prepare->bindValue(":password", $password);
+            $prepare->execute();
+
+            return $prepare->rowCount();
 
         } catch (Exception $e) {
             return [
@@ -83,7 +85,8 @@ Class Index {
     }
 
     // REGISTRA O CUPOM
-    public function couponRegister($code, $id, $cpf, $valor, $store, $date_time, $status, $session_cpf){
+    public function couponRegister($code, $id, $cpf, $valor, $store, $date_time, $status, $session_cpf): int|array
+    {
 
         $cpValidation = $this->couponValidation($code, $cpf, $session_cpf);
 
@@ -94,15 +97,17 @@ Class Index {
                 $sql = "INSERT INTO coupons (code, user_id, cpf, valor, store, date_time, status) 
                         VALUES (:code, :user_id, :cpf, :valor, :store, :date_time, :status)";
     
-                $result = $this->pdo->prepare($sql);
-                $result->bindValue(":code", $code);
-                $result->bindValue(":user_id", $id);
-                $result->bindValue(":cpf", $cpf);
-                $result->bindValue(":valor", $valor);
-                $result->bindValue(":store", $store);
-                $result->bindValue(":date_time", $date_time);
-                $result->bindValue(":status", $status);
-                $result->execute();
+                $prepare = $this->conn->prepare($sql);
+                $prepare->bindValue(":code", $code);
+                $prepare->bindValue(":user_id", $id);
+                $prepare->bindValue(":cpf", $cpf);
+                $prepare->bindValue(":valor", $valor);
+                $prepare->bindValue(":store", $store);
+                $prepare->bindValue(":date_time", $date_time);
+                $prepare->bindValue(":status", $status);
+                $prepare->execute();
+
+                return $prepare->rowCount();
     
             } catch (Exception $e) {
 
@@ -137,6 +142,7 @@ Class Index {
         }elseif($cpValidation['success'] === 'false') {
 
             return [
+
                 "success" =>  false,
                 "message" => $cpValidation['message']
             ];
@@ -145,7 +151,8 @@ Class Index {
     }
 
     // FAZ A VALIDAÇAO DO CUPOM
-    public function couponValidation($code, $cpf, $session_cpf){
+    public function couponValidation($code, $cpf, $session_cpf): array|string
+    {
 
         if(!$this->couponCodeValidation($code)){
 
@@ -169,23 +176,34 @@ Class Index {
     }
     
     //VERIFICA SE O CUPON JÁ EXISTE
-    function couponCodeValidation($code){
+    function couponCodeValidation($code): bool|array 
+    {
 
-         $result = array();
-         $sql = "SELECT * FROM coupons WHERE code = '$code'";
-         $query = $this->pdo->query($sql);
-         $result = $query->fetchAll(PDO::FETCH_ASSOC);
- 
-         if(count($result) > 0){
-             return false;
-         }else {
-             return true;
-         }
+        try {
+
+            $result = array();
+            $sql = "SELECT * FROM coupons WHERE code = '$code'";
+            $query = $this->conn->query($sql);
+            $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            if(count($result) > 0){
+                return false;
+            }else {
+                return true;
+            }
+
+        } catch (Exception $e) {
+            return [
+                "sucesso" => false,
+                "mensagem" => $e->getMessage()
+            ];
+        }
      
     }
 
     //VERIFICA SE O CPF DO CUPOM É O MESMO DO USUARIO LOGADO
-    public function couponUserSessionCpfValidation($cpf, $session_cpf){
+    public function couponUserSessionCpfValidation(string $cpf, string $session_cpf): bool
+    {
         
         if($cpf == $session_cpf) {
             return true;
@@ -195,15 +213,16 @@ Class Index {
     }
 
     // LISTA USUARIOS
-    public function listUsers(){
+    public function listUsers(): array
+    {
 
         try {
 
             $result = array();
             $sql = "SELECT id, name, sex, born_in FROM users";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    
+
             return $result;
 
         } catch (Exception $e) {
@@ -215,14 +234,14 @@ Class Index {
 
     }
     //LISTA OS COUPONS DO USUARIO
-    public function listUserCoupons($id){
-
+    public function listUserCoupons($id): array
+    {
 
         try {
 
             $result = array();
             $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status DESC";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
     
             return $result;
@@ -236,13 +255,14 @@ Class Index {
     }
 
     //LISTA OS NUMEROS DA SORTE
-    public function listLuckNumbers($id){
+    public function listLuckNumbers($id): array
+    {
 
         try {
 
             $result = array();
             $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
     
             return $result;
@@ -256,18 +276,19 @@ Class Index {
 
     }
 
-    //PEGA OS CUPONS VALIDOS
-    public function getUserValidCoupons($id){
-
+    //PEGA OS CUPONS VALIDOS E SOMA O TOTAL DELES
+    public function getUserValidCoupons($id): int|float
+    {
 
         try {
 
             $result = array();
             $sql = "SELECT SUM(valor) AS total FROM coupons WHERE user_id = $id and status = '1'";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    
-            return $result[0]['total'];
+            $totalResult = (float)$result[0]['total'];
+
+            return $totalResult;
 
         } catch (Exception $e) {
             return [
@@ -278,20 +299,23 @@ Class Index {
     }
 
     //CRIA OS NUMEROS DA SORTE
-    public function createLuckNumbers($guid, $id){
+    public function createLuckNumbers($guid, $id): bool|array
+    {
 
         try {
 
             $sql = "INSERT INTO luck_numbers (hash, user_id) VALUES (:hash, :user_id)";
-            $result = $this->pdo->prepare($sql);
-            $result->bindValue(":hash", $guid);
-            $result->bindValue(":user_id", $id);
-            $result->execute();
+            $prepare = $this->conn->prepare($sql);
+            $prepare->bindValue(":hash", $guid);
+            $prepare->bindValue(":user_id", $id);
+            $prepare->execute();
 
-        } catch (Exception $e) {
-            return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+            return $prepare->rowCount();
+
+            } catch (Exception $e) {
+                return [
+                    "sucesso" => false,
+                    "mensagem" => $e->getMessage()
             ];
         }
 
@@ -299,15 +323,18 @@ Class Index {
     }
 
     //DESATIVA OS CUPONS QUE JA FORAM PROCESSADOS
-    public function deactivateCoupons($id){
+    public function deactivateCoupons($id): bool|array
+    {
 
         try {
 
             $sql = "UPDATE coupons SET status = :status WHERE user_id = :id";
-            $result = $this->pdo->prepare($sql);
-            $result->bindValue(":status", 0);
-            $result->bindValue(":id", $id);
-            $result->execute();
+            $prepare = $this->conn->prepare($sql);
+            $prepare->bindValue(":status", 0);
+            $prepare->bindValue(":id", $id);
+            $prepare->execute();
+
+            return $prepare->rowCount();
 
         } catch (Exception $e) {
             return [
@@ -318,7 +345,8 @@ Class Index {
     }
 
     // GERA O GUID
-    function guidv4($data = null) {
+    function guidv4($data = null) 
+    {
         // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
         $data = $data ?? random_bytes(16);
         assert(strlen($data) == 16);
@@ -333,16 +361,19 @@ Class Index {
     }
 
     //VERIFICA ESTADO DO SORTEIO
-    public function verifySweepstakeStatus(){
+    public function verifySweepstakeStatus(): int|array
+    {
 
         try {
 
             $result = array();
             $sql = "SELECT status FROM sweepstake_status";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
     
-            return $result[0]['status'];
+            $boolResultTransform = (bool)$result[0]['status'];
+
+            return $boolResultTransform;
 
         } catch (Exception $e) {
             return [
@@ -353,17 +384,18 @@ Class Index {
     }
 
     //REALIZA O SORTEIO
-    public function raffle(){
+    public function raffle(): array
+    {
         
         try {
 
             $result = array();
             $sql = "SELECT hash FROM luck_numbers";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
-        } catch (Exception $e) {
+        } catch (Exception $e){
             return [
                 "sucesso" => false,
                 "mensagem" => $e->getMessage()
@@ -383,7 +415,7 @@ Class Index {
             $winnerName = $this->searchForHashOwner($hashList[$raffled[0]]);
     
             //MUDA O STATUS DO SORTEIO
-            $query = $this->pdo->query("UPDATE sweepstake_status SET status = 1");
+            $query = $this->conn->query("UPDATE sweepstake_status SET status = 1");
             
             return [
                 "winnerNumber" => $hashList[$raffled[0]],
@@ -400,13 +432,14 @@ Class Index {
 
     }
 
-    //MUDA STATUS DO SORTEIO PARA FALSE NO DB PARA HABILITAR NOVO SORTEIO (SORTEIO NÂO REALIZADO)
-    public function enableSweepstake(){
+    //MUDA STATUS DO SORTEIO PARA FALSE NO DB PARA HABILITAR NOVO SORTEIO (SORTEIO NÃO REALIZADO)
+    public function enableSweepstake()
+    {
 
         try {
 
             //MUDA O STATUS DO SORTEIO
-            $query = $this->pdo->query("UPDATE sweepstake_status SET status = 0");
+            $query = $this->conn->query("UPDATE sweepstake_status SET status = 0");
 
         } catch (Exception $e) {
             return [
@@ -414,16 +447,16 @@ Class Index {
                 "mensagem" => $e->getMessage()
             ];
         }
-    
+
     }
 
-    public function searchForHashOwner($hash){
-
+    public function searchForHashOwner($hash): string|array
+    {
 
         try {
 
             $sql = "SELECT n.hash, u.name FROM luck_numbers AS n INNER JOIN users AS u ON n.user_id=u.id WHERE n.hash='$hash'";
-            $query = $this->pdo->query($sql);
+            $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
     
             return $result;
@@ -434,15 +467,18 @@ Class Index {
                 "mensagem" => $e->getMessage()
             ];
         }
-        
+
     }
 
     //FINALIZA SORTEIO E LIMPA OS NUMEROS
-    public function endRaffle(){
+    public function endRaffle()/* : bool|array */
+    {
         try {
 
             $sql = "DELETE FROM luck_numbers";
-            $result = $this->pdo->query($sql);
+            $result = $this->conn->query($sql);
+
+            return $result;
 
         } catch (Exception $e) {
             return [
@@ -453,8 +489,8 @@ Class Index {
     }
 
     //DESLOGA
-    public function logout(){
-        
+    public function logout(): void
+    {
         unset($_SESSION['logged']);
         unset($_SESSION['name']);
         unset($_SESSION['autho']);
