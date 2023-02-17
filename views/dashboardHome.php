@@ -46,7 +46,7 @@ if(isset($_POST['coupon_register'])){
         $message = $response['message'];
 
       }else{
-        
+
         $isValid = false; 
         $message = 'Algum problema foi encontrado!';
 

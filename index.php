@@ -58,7 +58,7 @@ if(isset($_POST['login'])){
     <label>Senha: </label>
     <input name="password" id="password" type="password" maxlength="100">
 
-    <a href="userRegister.php">Registrar</a>
+    <a href="./views/userRegister.php">Registrar</a>
     <input type="submit" id="login" name="login" value="Login">
 
     <?php if(!empty($message) and !$isValid) echo "<div id='error-message'>".$message."</div>" ?>

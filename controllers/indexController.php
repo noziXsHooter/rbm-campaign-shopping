@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 session_start();
 
@@ -24,7 +25,7 @@ Class Index {
     }
 
     //LOGA
-    public function login($cpf,$password): array
+    public function login(string $cpf, string $password): array
     {
         
         $result = array();
@@ -52,7 +53,7 @@ Class Index {
     }
 
     //REGISTRA USUARIO
-    public function userRegister($name, $born_in, $sex, $cpf, $password): int|array
+    public function userRegister(string $name, string $born_in, string $sex, string $cpf, string $password): int|array
     {
 
         try {
@@ -85,7 +86,7 @@ Class Index {
     }
 
     // REGISTRA O CUPOM
-    public function couponRegister($code, $id, $cpf, $valor, $store, $date_time, $status, $session_cpf): int|array
+    public function couponRegister(int $code, int $id, string $cpf, float $valor, string $store, string $date_time, int $status, string $session_cpf): int|array
     {
 
         $cpValidation = $this->couponValidation($code, $cpf, $session_cpf);
@@ -149,7 +150,7 @@ Class Index {
     }
 
     // FAZ A VALIDAÇAO DO CUPOM
-    public function couponValidation($code, $cpf, $session_cpf): array|string
+    public function couponValidation(int $code, string $cpf, string $session_cpf): array|string
     {
 
         if(!$this->couponCodeValidation($code)){
@@ -174,7 +175,7 @@ Class Index {
     }
     
     //VERIFICA SE O CUPON JÁ EXISTE
-    function couponCodeValidation($code): bool|array 
+    function couponCodeValidation(int $code): bool|array 
     {
 
         try {
@@ -232,7 +233,7 @@ Class Index {
 
     }
     //LISTA OS COUPONS DO USUARIO
-    public function listUserCoupons($id): array
+    public function listUserCoupons(int $id): array
     {
 
         try {
@@ -253,7 +254,7 @@ Class Index {
     }
 
     //LISTA OS NUMEROS DA SORTE
-    public function listLuckNumbers($id): array
+    public function listLuckNumbers(int $id): array
     {
 
         try {
@@ -275,7 +276,7 @@ Class Index {
     }
 
     //PEGA OS CUPONS VALIDOS E SOMA O TOTAL DELES
-    public function getUserValidCoupons($id): int|float
+    public function getUserValidCoupons(int $id): int|float
     {
 
         try {
@@ -321,7 +322,7 @@ Class Index {
     }
 
     //DESATIVA OS CUPONS QUE JA FORAM PROCESSADOS
-    public function deactivateCoupons($id): bool|array
+    public function deactivateCoupons(int $id): bool|array
     {
 
         try {
@@ -359,7 +360,7 @@ Class Index {
     }
 
     //VERIFICA ESTADO DO SORTEIO
-    public function verifySweepstakeStatus(): int|array
+    public function verifySweepstakeStatus(): bool|array
     {
 
         try {
