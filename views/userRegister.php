@@ -24,6 +24,17 @@ if(isset($_POST['user_register'])){
 
       $response = $p->userRegister($_POST['name'], $_POST['born_in'], $_POST['sex'], $_POST['cpf'], $_POST['password']);
     
+      if($response['success']){
+
+        $isValid = true; 
+        $message = $response['message'];
+
+      }elseif(!$response['success']){
+
+        $isValid = false; 
+        $message = $response['message'];
+        
+      }
     }
 
 }

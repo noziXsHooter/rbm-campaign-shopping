@@ -27,55 +27,100 @@ Class Index {
     //LOGA
     public function login(string $cpf, string $password): array
     {
-        
-        $result = array();
-        $sql = "SELECT * FROM users WHERE cpf = '$cpf' and password = '$password'";
-        $query = $this->conn->query($sql);
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        try {
 
-        if(count($result) > 0){
+            $result = array();
+            $sql = "SELECT cpf, password FROM users WHERE cpf = '$cpf'";
 
-            $_SESSION['logged'] = true;
-            $_SESSION['name'] = $result[0]['name'];
-            $_SESSION['autho'] = $result[0]['autho'];
-            $_SESSION['id'] = $result[0]['id'];
-            $_SESSION['cpf'] = $result[0]['cpf'];
-                
-            header('Location: ./views/dashboardHome.php?');
+            $prepare = $this->conn->prepare($sql);
+            $result = $prepare->execute();
+            $pass = $prepare->fetchColumn(1);
 
-        }else {
+            $verifyPass = password_verify($password, $pass);
 
+            if($verifyPass){
+    
+                $_SESSION['logged'] = true;
+                $_SESSION['name'] = $result[0]['name'];
+                $_SESSION['autho'] = $result[0]['autho'];
+                $_SESSION['id'] = $result[0]['id'];
+                $_SESSION['cpf'] = $result[0]['cpf'];
+                    
+                header('Location: ./views/dashboardHome.php?');
+    
+            }else {
+    
+                return [
+                    
+                    'success' => false,
+                    'message'=> 'Dados inválidos!'
+                ];
+            }
+
+        }catch (Exception $e) {
             return [
-                'message'=> 'Dados inválidos!',
-                'status' => false
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
+
+
     }
 
     //REGISTRA USUARIO
-    public function userRegister(string $name, string $born_in, string $sex, string $cpf, string $password): int|array
+    public function userRegister(string $name, string $born_in, string $sex, string $cpf, string $password): array
     {
 
         try {
 
-            $sql = "INSERT INTO users (name, born_in, autho, sex, cpf, password) 
-                    VALUES (:name, :born_in, :autho, :sex, :cpf, :password)";
+            $sqlSelect = "SELECT * from users WHERE cpf = '$cpf'";
+            $selectResult = $this->conn->query($sqlSelect);
+            $selectCount = $selectResult->rowCount();
 
-            $prepare = $this->conn->prepare($sql);
-            $prepare->bindValue(":name", $name);
-            $prepare->bindValue(":born_in", $born_in);
-            $prepare->bindValue(":autho", 1);
-            $prepare->bindValue(":sex", $sex);
-            $prepare->bindValue(":cpf", $cpf);
-            $prepare->bindValue(":password", $password);
-            $prepare->execute();
+            if($selectCount > 0){
 
-            return $prepare->rowCount();
+                return [
+                    "success" => false,
+                    "message" => 'Esse cpf já existe!'
+                ];
+
+            }else{
+
+                $sqlInsert = "INSERT INTO users (name, born_in, autho, sex, cpf, password) 
+                        VALUES (:name, :born_in, :autho, :sex, :cpf, :password)";
+    
+                $prepare = $this->conn->prepare($sqlInsert);
+                $prepare->bindValue(":name", $name);
+                $prepare->bindValue(":born_in", $born_in);
+                $prepare->bindValue(":autho", 1);
+                $prepare->bindValue(":sex", $sex);
+                $prepare->bindValue(":cpf", $cpf);
+                $prepare->bindValue(":password", password_hash($password, PASSWORD_DEFAULT));
+                
+                $result = $prepare->execute();
+
+                if($result){
+
+                    return [
+                        "success" => true,
+                        "message" => 'O cadastro foi um sucesso!'
+                    ];
+
+                }else{
+
+                    return [
+                        "success" => false,
+                        "message" => 'Deu ruim aí!'
+                    ];
+                }
+
+            }
+
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     
