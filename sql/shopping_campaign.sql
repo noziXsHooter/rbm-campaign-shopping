@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Tempo de geração: 10-Fev-2023 às 20:08
--- Versão do servidor: 10.5.16-MariaDB
--- versão do PHP: 7.3.32
+-- Host: 127.0.0.1
+-- Tempo de geração: 17-Fev-2023 às 05:17
+-- Versão do servidor: 10.4.25-MariaDB
+-- versão do PHP: 8.0.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `id20276416_shoppingcampaign`
+-- Banco de dados: `shopping_campaign`
 --
 
 -- --------------------------------------------------------
@@ -44,13 +43,29 @@ CREATE TABLE `coupons` (
 --
 
 INSERT INTO `coupons` (`id`, `user_id`, `code`, `cpf`, `valor`, `store`, `date_time`, `status`) VALUES
-(52, 1, 10256, '11111111111', 250, 'Loja 1', '2023-02-08 16:26:00', 0),
-(53, 2, 10406, '22222222222', 500, 'Loja 4', '2023-02-08 16:27:41', 0),
-(54, 1, 10605, '11111111111', 500, 'Loja 1', '2023-02-08 16:31:00', 0),
-(55, 1, 10706, '11111111111', 80, 'Loja2', '2023-02-08 16:32:00', 1),
-(56, 2, 19320, '22222222222', 600, 'Loja 3', '2023-02-08 16:34:00', 0),
-(57, 7, 19203, '3333333333', 100, 'Loja 1', '2023-02-08 16:37:00', 0),
-(58, 7, 10293, '3333333333', 250, 'Loja 2', '2023-02-08 16:37:00', 0);
+(57, 1, 23454, '11111111111', 350, 'Loja 1', '2023-02-08 10:10:00', 0),
+(58, 1, 54683, '11111111111', 470, 'Loja 2', '2023-02-08 10:10:00', 0),
+(59, 1, 73654, '11111111111', 150, 'Loja 3', '2023-02-08 10:10:00', 0),
+(60, 2, 54345, '2222222222', 670, 'Loja 3', '2023-02-08 10:10:00', 0),
+(61, 2, 5643, '2222222222', 150, 'Loja 2', '2023-02-08 10:10:00', 1),
+(62, 7, 63697, '33333333333', 250, 'Loja 4', '2023-02-08 10:10:00', 0),
+(63, 7, 95443, '33333333333', 700, 'Loja 2', '2023-02-08 10:10:00', 0),
+(64, 1, 87452, '11111111111', 700, 'Loja teste', '2023-02-13 10:10:00', 0),
+(65, 1, 87745, '11111111111', 10, 'Loja teste', '2023-02-15 10:10:00', 0),
+(66, 1, 9652, '11111111111', 10, 'gf', '2023-02-15 10:10:00', 0),
+(67, 1, 6987, '11111111111', 5, '1fgf', '2023-02-15 10:10:00', 0),
+(68, 1, 7488, '11111111111', 1000, 'Loja 3', '2023-02-16 10:10:00', 0),
+(69, 1, 74178, '11111111111', 200, 'gfgf', '2023-02-15 10:10:00', 0),
+(70, 1, 74521, '11111111111', 10, 'yhf', '2023-02-08 10:10:00', 0),
+(71, 1, 7421, '11111111111', 10, '10', '2023-02-16 10:10:00', 0),
+(72, 1, 74125, '11111111111', 10, '10', '2023-02-01 10:10:00', 0),
+(73, 1, 96231, '11111111111', 5000, 'Loja teste', '2023-02-15 10:10:00', 0),
+(74, 1, 8563, '11111111111', 10, '10', '2023-02-15 10:10:00', 0),
+(75, 1, 9632, '11111111111', 10, 'Loja 3', '2023-02-15 10:10:00', 0),
+(76, 1, 7147, '11111111111', 10, '10', '2023-02-15 10:10:00', 0),
+(77, 1, 14788, '11111111111', 10, 'test', '2023-02-16 10:10:00', 0),
+(78, 1, 14785, '11111111111', 500, '1', '2023-02-16 10:10:00', 0),
+(79, 1, 7485, '11111111111', 1100, '10', '2023-02-16 10:10:00', 0);
 
 -- --------------------------------------------------------
 
@@ -64,18 +79,6 @@ CREATE TABLE `luck_numbers` (
   `hash` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `luck_numbers`
---
-
-INSERT INTO `luck_numbers` (`id`, `user_id`, `hash`) VALUES
-(21, 1, '2e0fde4e-6f2d-44f7-a882-f525c6425348'),
-(22, 1, '0d33ac86-6558-4bde-84b6-14adb0ba1c4e'),
-(23, 2, 'f61c7874-2789-41f3-9e81-45bb67943ff0'),
-(24, 2, '6f180cef-89da-4419-9d04-5fec3176b686'),
-(25, 2, 'e4880f97-7ccf-4f72-bcc5-7f7f686c2232'),
-(26, 7, 'c2ac2d89-f128-4bb8-9954-f89e8ebf7f3c');
-
 -- --------------------------------------------------------
 
 --
@@ -83,8 +86,8 @@ INSERT INTO `luck_numbers` (`id`, `user_id`, `hash`) VALUES
 --
 
 CREATE TABLE `sweepstake_status` (
-  `status` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `status` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `sweepstake_status`
@@ -114,9 +117,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `autho`, `cpf`, `name`, `sex`, `born_in`, `password`) VALUES
-(1, 5, '11111111111', 'John Doe', 'Masculino', '2023-06-30', '12345'),
-(2, 1, '22222222222', 'Jane Doe', 'Feminino', '2023-05-30', '12345'),
-(7, 1, '33333333333', 'Jao Maria', 'Masculino', '2023-02-07', '12345');
+(1, 5, '11111111111', 'John Doe', 'Masculino', '2023-06-30', '$2y$10$N8CKLqFyEc1edZNyQtzawOBdHA7P9iyajZdC2exmU7VYznQJmOhJu'),
+(2, 1, '22222222222', 'Jane Doe', 'Feminino', '2023-05-30', '$2y$10$N8CKLqFyEc1edZNyQtzawOBdHA7P9iyajZdC2exmU7VYznQJmOhJu'),
+(7, 1, '33333333333', 'Jao Maria', 'Masculino', '2023-02-07', '$2y$10$N8CKLqFyEc1edZNyQtzawOBdHA7P9iyajZdC2exmU7VYznQJmOhJu');
 
 --
 -- Índices para tabelas despejadas
@@ -156,19 +159,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de tabela `luck_numbers`
 --
 ALTER TABLE `luck_numbers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restrições para despejos de tabelas
