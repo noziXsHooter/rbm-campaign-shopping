@@ -1,0 +1,7 @@
+
+data: 24-02-2023 01:59:59 usuário: acabou de logar.
+data: 24-02-2023 02:00:06 usuário: acabou de logar.
+data: 24-02-2023 02:00:51 usuário: acabou de logar.
+data: 24-02-2023 02:09:45 usuário: acabou de logar.
+data: 24-02-2023 02:12:46 usuário: John Doeacabou de logar.
+data: 24-02-2023 02:13:22 usuário: John Doe acabou de logar.

@@ -30,13 +30,13 @@ Class Index {
         try {
 
             $result = array();
-            $sql = "SELECT cpf, password FROM users WHERE cpf = '$cpf'";
+            $sql = "SELECT * FROM users WHERE cpf = '$cpf'";
 
             $prepare = $this->conn->prepare($sql);
             $result = $prepare->execute();
-            $pass = $prepare->fetchColumn(1);
+            $result = $prepare->fetchAll();
 
-            $verifyPass = password_verify($password, $pass);
+            $verifyPass = password_verify($password, $result[0]['password']);
 
             if($verifyPass){
     
@@ -45,13 +45,19 @@ Class Index {
                 $_SESSION['autho'] = $result[0]['autho'];
                 $_SESSION['id'] = $result[0]['id'];
                 $_SESSION['cpf'] = $result[0]['cpf'];
-                    
+
+                //SALVA NO LOG
+                $logdate = date('d-m-Y H:i:s');
+                $logfile = fopen('./logs.txt','a+', false);
+                $text = 'data: ' . $logdate . ' usuário: ' . $_SESSION['name'] . ' acabou de logar.' . "\n";
+                fwrite($logfile, $text);
+                fclose($logfile);
+                 
                 header('Location: ./views/dashboardHome.php?');
-    
+
             }else {
     
                 return [
-                    
                     'success' => false,
                     'message'=> 'Dados inválidos!'
                 ];
