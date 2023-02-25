@@ -4,7 +4,9 @@ require_once './controllers/indexController.php';
 
 include './inc/config.php';
 
+
 $p = new Index($dbname, $host, $user, $password);
+
 
 $isValid = null;
 $message = '';

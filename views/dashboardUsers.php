@@ -35,7 +35,7 @@ if(isset($_POST['coupon_register'])){
 
     }
 
-    if(isset($response['sucesso']) and $response['sucesso']){
+    if(isset($response['success']) and $response['success']){
 
       $isValid = true; 
       $message = 'Cupom cadastrado com sucesso!';

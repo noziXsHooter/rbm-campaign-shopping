@@ -1,11 +1,24 @@
 <?php
 declare(strict_types=1);
 
+date_default_timezone_set('America/Sao_Paulo');
+
 session_start();
 
+//SEPARA OS DIRETORIOS EM ARRAYS
+$requestedUri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
-Class Index {
+if($requestedUri[2] === 'index.php') {
 
+    include 'inc/logs.php';
+   
+}else{
+
+    include '../inc/logs.php';
+}
+
+class Index {
+    
     private $conn;
 
     //CONSTROI A CONEXÃO COM O DB
@@ -47,11 +60,7 @@ Class Index {
                 $_SESSION['cpf'] = $result[0]['cpf'];
 
                 //SALVA NO LOG
-                $logdate = date('d-m-Y H:i:s');
-                $logfile = fopen('./logs.txt','a+', false);
-                $text = 'data: ' . $logdate . ' usuário: ' . $_SESSION['name'] . ' acabou de logar.' . "\n";
-                fwrite($logfile, $text);
-                fclose($logfile);
+                $this->saveLogs('loginSuccess');
                  
                 header('Location: ./views/dashboardHome.php?');
 
@@ -107,6 +116,9 @@ Class Index {
 
                 if($result){
 
+                    //SALVA NO LOG
+                    $this->saveLogs('userRegisterSuccess', $cpf);
+
                     return [
                         "success" => true,
                         "message" => 'O cadastro foi um sucesso!'
@@ -131,8 +143,8 @@ Class Index {
         }
     
         return [
-            "sucesso" => true,
-            "mensagem" => "Pessoa cadastrada com sucesso."
+            "success" => true,
+            "message" => "Pessoa cadastrada com sucesso!"
         ];
     }
 
@@ -181,6 +193,9 @@ Class Index {
 
                 $this->deactivateCoupons($id);
             }
+
+            //SALVA NO LOG
+            $this->saveLogs('couponRegisterSuccess', array($code,$cpf));
 
             return [
 
@@ -244,8 +259,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
      
@@ -277,8 +292,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
 
@@ -298,8 +313,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     }
@@ -319,8 +334,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
 
@@ -342,8 +357,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     }
@@ -364,8 +379,8 @@ Class Index {
 
             } catch (Exception $e) {
                 return [
-                    "sucesso" => false,
-                    "mensagem" => $e->getMessage()
+                    "success" => false,
+                    "message" => $e->getMessage()
             ];
         }
 
@@ -388,8 +403,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     }
@@ -427,8 +442,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     }
@@ -447,8 +462,8 @@ Class Index {
 
         } catch (Exception $e){
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
 
@@ -493,8 +508,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
 
@@ -513,8 +528,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
 
@@ -532,8 +547,8 @@ Class Index {
 
         } catch (Exception $e) {
             return [
-                "sucesso" => false,
-                "mensagem" => $e->getMessage()
+                "success" => false,
+                "message" => $e->getMessage()
             ];
         }
     }
@@ -550,8 +565,34 @@ Class Index {
         header('Location: ../index.php');
     }
 
-}
+    //REGISTRA OS LOGS
+    public function saveLogs($logType, $identifier = null)
+    {
 
+        try{
+
+            $log = new Log;
+            $return_value = match ($logType) {
+    
+                'loginSuccess' => $log->loginLog(),
+                'userRegisterSuccess' => $log->userRegisterSuccessLog($identifier),
+                'couponRegisterSuccess' => $log->couponRegisterSuccessLog($identifier),
+                /* 'login' => $this->registerLog() */
+
+                default => throw new InvalidArgumentException("Utilize um argumento válido.")
+            };
+
+        }catch (\UnhandledMatchError $e) {
+
+            return [
+                "success" => false,
+                "message" => $e->getMessage()
+            ];
+        };
+
+    }
+
+}
 
 
 ?>

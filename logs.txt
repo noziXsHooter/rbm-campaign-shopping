@@ -1,7 +1,8 @@
-
-data: 24-02-2023 01:59:59 usuário: acabou de logar.
-data: 24-02-2023 02:00:06 usuário: acabou de logar.
-data: 24-02-2023 02:00:51 usuário: acabou de logar.
-data: 24-02-2023 02:09:45 usuário: acabou de logar.
-data: 24-02-2023 02:12:46 usuário: John Doeacabou de logar.
-data: 24-02-2023 02:13:22 usuário: John Doe acabou de logar.
+data: 24-02-2023 22:36:24 usuário:  acabou de logar.
+data: 24-02-2023 22:37:04 usuário:  acabou de logar.
+data: 24-02-2023 22:37:09 usuário:  acabou de logar.
+data: 24-02-2023 21:52:06 usuário: John Doe acabou de logar.
+data: 24-02-2023 22:59:19 o cpf: 88888888888 foi registrado.
+data: 24-02-2023 23:16:29 usuário: John Doe acabou de logar.
+data: 24-02-2023 23:21:20 o cupom: 9321457 foi registrado.
+data: 24-02-2023 23:28:22 o cupom: 874521 foi registrado.pelo cpf999999999
