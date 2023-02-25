@@ -14,7 +14,7 @@ if($requestedUri[2] === 'index.php') {
    
 }else{
 
-    include '../inc/logs.php';
+    include '../inc/logs.inc.php';
 }
 
 class Index {
@@ -149,7 +149,7 @@ class Index {
     }
 
     // REGISTRA O CUPOM
-    public function couponRegister(int $code, int $id, string $cpf, float $valor, string $store, string $date_time, int $status, string $session_cpf): int|array
+    public function couponRegister(int $code, int $id, string $cpf, float $valor, string $store, string $date_time, string $status, string $session_cpf): int|array
     {
 
         $cpValidation = $this->couponValidation($code, $cpf, $session_cpf);
@@ -305,7 +305,7 @@ class Index {
         try {
 
             $result = array();
-            $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status DESC";
+            $sql = "SELECT code, valor, store, date_time, status FROM coupons WHERE user_id = $id ORDER BY status ASC";
             $query = $this->conn->query($sql);
             $result = $query->fetchAll(PDO::FETCH_ASSOC);
     
@@ -364,7 +364,7 @@ class Index {
     }
 
     //CRIA OS NUMEROS DA SORTE
-    public function createLuckNumbers($guid, $id): bool|array
+    public function createLuckNumbers($guid, $id): int|array
     {
 
         try {
@@ -388,7 +388,7 @@ class Index {
     }
 
     //DESATIVA OS CUPONS QUE JA FORAM PROCESSADOS
-    public function deactivateCoupons(int $id): bool|array
+    public function deactivateCoupons(int $id): int|array
     {
 
         try {
@@ -448,7 +448,7 @@ class Index {
         }
     }
 
-    //REALIZA O SORTEIO
+    //REALIZA O SORTEIO (SORTEIO TEÓRICO - PODE SER REALIZADO UM NOVO SORTEIO SEM DETRIMENTO DOS COUPONS E DOS NUMEROS DA SORTE)
     public function raffle(): array
     {
         
@@ -482,6 +482,10 @@ class Index {
             //MUDA O STATUS DO SORTEIO
             $query = $this->conn->query("UPDATE sweepstake_status SET status = 1");
             
+            //SALVA NO LOG
+            $this->saveLogs('enableRaffleSuccess', array($winnerName[0]['name'], $hashList[$raffled[0]]));
+
+
             return [
                 "winnerNumber" => $hashList[$raffled[0]],
                 "winnerName" => $winnerName[0]['name'],
@@ -506,6 +510,9 @@ class Index {
             //MUDA O STATUS DO SORTEIO
             $query = $this->conn->query("UPDATE sweepstake_status SET status = 0");
 
+            //SALVA NO LOG
+            $this->saveLogs('enableSweepstake');
+
         } catch (Exception $e) {
             return [
                 "success" => false,
@@ -515,6 +522,7 @@ class Index {
 
     }
 
+    //PROCURA PELO NOME DO GANHADOR DO SORTEIO PELO HASH SORTEADO
     public function searchForHashOwner($hash): string|array
     {
 
@@ -542,6 +550,9 @@ class Index {
 
             $sql = "DELETE FROM luck_numbers";
             $result = $this->conn->query($sql);
+
+            //SALVA NO LOG
+            $this->saveLogs('endRaffleSuccess');
 
             return $result;
 
@@ -577,6 +588,9 @@ class Index {
                 'loginSuccess' => $log->loginLog(),
                 'userRegisterSuccess' => $log->userRegisterSuccessLog($identifier),
                 'couponRegisterSuccess' => $log->couponRegisterSuccessLog($identifier),
+                'enableRaffleSuccess' => $log->enableRaffleSuccessLog($identifier),
+                'endRaffleSuccess' => $log->endRaffleSuccessLog(),
+                'enableSweepstake' => $log->enableSweepstakeSuccessLog(),
                 /* 'login' => $this->registerLog() */
 
                 default => throw new InvalidArgumentException("Utilize um argumento válido.")
